@@ -1,5 +1,7 @@
 #
-# Easy way to load the module for the developement
+# VirtualEnvWrapper for Power shell
+#
+# Development installation script
 #
 
 Remove-Module VirtualEnvWrapper
