@@ -6,8 +6,13 @@
 
 $PowerShellProfile = $PROFILE.CurrentUserAllHosts
 $PowerShellPath = Split-Path $PowerShellProfile
+
+Import-LocalizedData -BaseDirectory .\VirtualEnvWrapper -FileName VirtualEnvWrapper.psd1 -BindingVariable Data
+$ModuleVersion = $Data.ModuleVersion
+
 $InstallationDirectory = Join-Path $PowerShellPath Modules
 $InstallationPath = Join-Path $InstallationDirectory "VirtualEnvWrapper"
+$InstallationPath = Join-Path $InstallationPath $ModuleVersion
 
 
 function Ask-User($Message)
@@ -33,7 +38,7 @@ if (!(Test-Path $InstallationDirectory))
 }
 
 if (Test-Path $InstallationPath) {
-    Write-Host "Removing previously installed version"
+    Write-Host "Removing previously installed version $ModuleVersion"
     Remove-Item -Recurse -Force $InstallationPath
 }
 
