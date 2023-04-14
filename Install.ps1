@@ -6,7 +6,8 @@
 
 $PowerShellProfile = $PROFILE.CurrentUserAllHosts
 $PowerShellPath = Split-Path $PowerShellProfile
-$InstallationPath = Join-Path $PowerShellPath Modules
+$InstallationDirectory = Join-Path $PowerShellPath Modules
+$InstallationPath = Join-Path $InstallationDirectory "VirtualEnvWrapper"
 
 
 function Ask-User($Message)
@@ -19,21 +20,24 @@ function Ask-User($Message)
     return $Key
 }
 
-
-Write-Host
 $key = Ask-User "Do you want to install VirtualEnvWrapper for PowerShell?"
 if ($key -eq "n")
 {
     Exit
 }
 
-if (!(Test-Path $InstallationPath))
+if (!(Test-Path $InstallationDirectory))
 {
-    Write-Host "Creating directory: $InstallationPath"
-    New-Item -ItemType Directory -Force -Path $InstallationPath
+    Write-Host "Creating directory: $InstallationDirectory"
+    New-Item -ItemType Directory -Force -Path $InstallationDirectory
 }
 
-Copy-Item -Recurse .\VirtualEnvWrapper $InstallationPath\VirtualEnvWrapper
+if (Test-Path $InstallationPath) {
+    Write-Host "Removing previously installed version"
+    Remove-Item -Recurse -Force $InstallationPath
+}
+
+Copy-Item -Recurse .\VirtualEnvWrapper $InstallationPath
 
 if (!(Test-Path $PowerShellProfile))
 {
