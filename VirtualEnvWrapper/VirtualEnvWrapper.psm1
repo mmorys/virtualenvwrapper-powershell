@@ -249,7 +249,7 @@ function New-VirtualEnv($EnvName, $PythonVersion) {
 
 function Remove-VirtualEnv($EnvName) {
     # Helper function: Remove the specified virtual environment from WORKON_HOME.
-    if ((Test-VirtualEnvActivate $EnvName) -eq $true) {
+    if ((Test-VirtualEnvActivate $EnvName)) {
         Write-FormattedError "The virtual environment '$EnvName' is active. Please 'deactivate' " `
                              "before to dispose the environment before"
         return $false
@@ -269,7 +269,11 @@ function Remove-VirtualEnv($EnvName) {
 
 function Test-VirtualEnvActivate($EnvName) {
     # Helper Function: Tests if a virtual environment is active.
-    return $Env:VIRTUAL_ENV -eq $EnvName
+    if (!$ENV:VIRTUAL_ENV) {
+        return $false
+    }
+    $ActivateEnvName = Split-Path $ENV:VIRTUAL_ENV -Leaf
+    return $ActivateEnvName -eq $EnvName
 }
 
 
