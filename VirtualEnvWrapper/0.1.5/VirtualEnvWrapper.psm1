@@ -349,5 +349,6 @@ $ScriptBlock = {
 }
 
 
-# Assign autocomplete to functions  (must be last)
+# Assign autocomplete to functions (must be last)
 Register-ArgumentCompleter -CommandName Start-VirtualEnv -ParameterName EnvName -ScriptBlock $ScriptBlock
+Register-ArgumentCompleter -CommandName Remove-VirtualEnv -ParameterName EnvName -ScriptBlock $ScriptBlock
