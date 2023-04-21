@@ -1,5 +1,12 @@
 # Changelog for VirtualEnvWrapper Powershell
 
+## 2021-05-07 (v.0.1.7)
+    * Add python version parameter to mktmpenv (@cswartzvi)
+	* Remove interactivity of install script (@cswartzvi)
+
+## 2021-05-07 (v.0.1.6)
+    * Forked version; major rewrite (@cswartzvi)
+
 ## 2021-05-07 (v.0.1.4)
     * Fix various compatibility issues with PowerShell 7 (thanks to @mmorys and @dbellandi)
 
@@ -13,7 +20,7 @@
 ## 2019-11-10 (v0.1.1)
 	* Partially merge Swiffer PR
 	* Start tagging
-	
+
 ## 2015-05-13
 	* Fix bug #1 (thanks to franciscosucre)
 	* Add installation script
