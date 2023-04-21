@@ -15,22 +15,6 @@ $InstallationPath = Join-Path $InstallationDirectory "VirtualEnvWrapper"
 $InstallationPath = Join-Path $InstallationPath $ModuleVersion
 
 
-function Ask-User($Message)
-{
-    Do
-    {
-        $Key = (Read-Host "$Message [Y/n]").ToLower()
-    } While ($Key -ne "y" -And $Key -ne "n")
-
-    return $Key
-}
-
-$key = Ask-User "Do you want to install VirtualEnvWrapper for PowerShell?"
-if ($key -eq "n")
-{
-    Exit
-}
-
 if (!(Test-Path $InstallationDirectory))
 {
     Write-Host "Creating directory: $InstallationDirectory"
@@ -46,11 +30,7 @@ Copy-Item -Recurse .\VirtualEnvWrapper $InstallationPath
 
 if (!(Test-Path $PowerShellProfile))
 {
-    $key = Ask-User "The PowerShell profile is missing. Do you want to create it?"
-    if ($key -eq "y")
-    {
-        Copy-Item Profile.ps1 $PowerShellProfile
-    }
+    Copy-Item Profile.ps1 $PowerShellProfile
 }
 else
 {
