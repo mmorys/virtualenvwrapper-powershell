@@ -1,6 +1,6 @@
 @{
     RootModule             = 'VirtualEnvWrapper.psm1'
-    ModuleVersion          = '0.1.6'
+    ModuleVersion          = '0.1.7'
     GUID                   = 'b9374afa-6681-4af0-96f8-1745b2d86b8e'
     Author                 = 'Charles W. Swartz VI'
     CompanyName            = ''

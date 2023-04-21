@@ -150,18 +150,21 @@ function Invoke-MakeVirtualEnv() {
 # #>
 function Invoke-MakeTempVirtualEnv() {
 
-    # Currently PS does not have a command for temp directories, so we use
-    $TempFile = New-TemporaryFile
-    $EnvName = $TempFile.Name
-    Remove-Item $TempFile
+    Param(
+        [Parameter()][alias("p")][string]$PythonVersion
+    )
+
+    $EnvName = "tmp-" + (GetNextID)
 
     Write-Host "Creating temporary virtual environment '$EnvName'"
-    If (!(New-VirtualEnv $EnvName)) {
+    If (!(New-VirtualEnv $EnvName $PythonVersion)) {
         return
     }
 
     Invoke-ActivateVirtualEnv $EnvName
 
+    # We need to wrap the `deactivate` command defined in the venv Activate
+    # script so that virtual environments are removed when deactivated.
     $ENV:_DEACTIVATE_SCRIPT_BLOCK = (Get-Command "deactivate").ScriptBlock
 
     function global:deactivate {
@@ -244,6 +247,15 @@ function New-VirtualEnv($EnvName, $PythonVersion) {
     Invoke-Expression "$Command -m venv '$EnvPath' --prompt '$EnvName'"
 
     return $true
+}
+
+
+function GetNextID($MaxSize = 10) {
+    # Helper function: Create a random identifier string.
+    $Guid = [guid]::NewGuid()
+    $Id = [string]$Guid
+    $Id = $Id.Replace("-", "")
+    return $Id.substring(0, $MaxSize)
 }
 
 
