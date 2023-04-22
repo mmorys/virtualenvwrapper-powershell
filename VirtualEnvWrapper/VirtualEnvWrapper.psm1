@@ -214,6 +214,7 @@ function Invoke-VirtualEnvWrapper() {
     Write-Host "Commands"
     Write-Host "lsvirtualenv:  List all available virtual environments."
     Write-Host "mkvirtualenv:  Create a new virtual environment."
+    Write-Host "mktmpenv:      Create a temporary virtual environment."
     Write-Host "rmvirtualenv:  Remove a virtual environment."
     Write-Host "workon:        Change the working virtual environment."
     Write-Host
