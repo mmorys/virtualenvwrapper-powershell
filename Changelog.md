@@ -1,6 +1,6 @@
 # Changelog for VirtualEnvWrapper Powershell
 
-## 2023-04-21 (v.0.1.7)
+## 2023-04-21 (v.0.2.0)
     * Add python version parameter to mktmpenv (@cswartzvi)
 	* Remove interactivity of install script (@cswartzvi)
 
