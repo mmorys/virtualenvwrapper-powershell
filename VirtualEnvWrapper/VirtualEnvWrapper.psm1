@@ -131,7 +131,9 @@ function Invoke-ListVirtualEnv {
 function Invoke-MakeVirtualEnv() {
     Param(
         [Parameter(Mandatory=$true)][string]$EnvName,
-        [Parameter()][alias("p")][string]$PythonVersion
+        [Parameter()][alias("p")][string]$PythonVersion,
+        [Parameter()][alias("r")][string]$Requirements,
+        [Parameter()][alias("i")][string[]]$Package
     )
 
     Write-Host "Creating new virtual environment '$EnvName'"
@@ -141,6 +143,8 @@ function Invoke-MakeVirtualEnv() {
     }
 
     Invoke-ActivateVirtualEnv $EnvName
+
+    Update-VirtualEnv $Requirements $Package
 }
 
 
@@ -151,7 +155,9 @@ function Invoke-MakeVirtualEnv() {
 function Invoke-MakeTempVirtualEnv() {
 
     Param(
-        [Parameter()][alias("p")][string]$PythonVersion
+        [Parameter()][alias("p")][string]$PythonVersion,
+        [Parameter()][alias("r")][string]$Requirements,
+        [Parameter()][alias("i")][string[]]$Package
     )
 
     $EnvName = "tmp-" + (GetNextID)
@@ -162,6 +168,8 @@ function Invoke-MakeTempVirtualEnv() {
     }
 
     Invoke-ActivateVirtualEnv $EnvName
+
+    Update-VirtualEnv $Requirements $Package
 
     # We need to wrap the `deactivate` command defined in the venv Activate
     # script so that virtual environments are removed when deactivated.
@@ -294,6 +302,22 @@ function Test-VirtualEnvExists($EnvName) {
     # Helper Function: Tests if a python virtual environment exists.
     $directory = Get-ChildItem $WORKON_HOME -Filter $EnvName -Directory
     return $null -ne $directory
+}
+
+
+function Update-VirtualEnv($Requirements, $Packages) {
+    # Helper Function: Install packages into a virtual environment.
+    if ($Requirements) {
+
+        if (!(Test-Path $Requirements)) {
+            Write-FormattedError "Specified requirements files does not exist"
+        }
+        Invoke-Expression "python -m pip install -r $Requirements"
+    }
+
+    foreach ($Package in $Packages) {
+        Invoke-Expression "python -m pip install $Package"
+    }
 }
 
 
