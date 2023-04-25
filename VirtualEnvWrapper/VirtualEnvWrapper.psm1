@@ -22,7 +22,6 @@
 # SOFTWARE.
 
 $WORKON_HOME=$Env:WORKON_HOME
-$Version = "0.1"
 Import-LocalizedData -FileName VirtualEnvWrapper.psd1 -BindingVariable Data
 $Version = $Data.ModuleVersion
 
