@@ -132,12 +132,13 @@ function Invoke-MakeVirtualEnv() {
         [Parameter(Mandatory=$true)][string]$EnvName,
         [Parameter()][alias("p")][string]$PythonVersion,
         [Parameter()][alias("r")][string]$Requirements,
-        [Parameter()][alias("i")][string[]]$Package
+        [Parameter()][alias("i")][string[]]$Package,
+        [Parameter()][switch]$Upgrade
     )
 
     Write-Host "Creating new virtual environment '$EnvName'"
 
-    if (!(New-VirtualEnv $EnvName $PythonVersion)) {
+    if (!(New-VirtualEnv $EnvName $PythonVersion $Upgrade)) {
         return
     }
 
@@ -156,13 +157,14 @@ function Invoke-MakeTempVirtualEnv() {
     Param(
         [Parameter()][alias("p")][string]$PythonVersion,
         [Parameter()][alias("r")][string]$Requirements,
-        [Parameter()][alias("i")][string[]]$Package
+        [Parameter()][alias("i")][string[]]$Package,
+        [Parameter()][switch]$Upgrade
     )
 
     $EnvName = "tmp-" + (GetNextID)
 
     Write-Host "Creating temporary virtual environment '$EnvName'"
-    If (!(New-VirtualEnv $EnvName $PythonVersion)) {
+    If (!(New-VirtualEnv $EnvName $PythonVersion $Upgrade)) {
         return
     }
 
@@ -234,7 +236,7 @@ function Get-VirtualEnvPath($Path) {
 }
 
 
-function New-VirtualEnv($EnvName, $PythonVersion) {
+function New-VirtualEnv($EnvName, $PythonVersion, $Upgrade) {
     # Helper function: Create the specified virtual environment in WORKON_HOME.
     if ($EnvName.StartsWith("-")) {
         Write-FormattedError "Virtual environments cannot start with a minus (-)"
@@ -248,11 +250,17 @@ function New-VirtualEnv($EnvName, $PythonVersion) {
 
     $Command = "py"
     if ($PythonVersion) {
-        $Command = "$Command -$PythonVersion"
+        $Command += " -$PythonVersion "
     }
 
     $EnvPath = Get-VirtualEnvPath $EnvName
-    Invoke-Expression "$Command -m venv '$EnvPath' --prompt '$EnvName'"
+    $Command += " -m venv '$EnvPath' --prompt '$EnvName'"
+
+    if ($Upgrade) {
+        $Command += " --upgrade-deps"
+    }
+
+    Invoke-Expression "$Command"
 
     return $true
 }
