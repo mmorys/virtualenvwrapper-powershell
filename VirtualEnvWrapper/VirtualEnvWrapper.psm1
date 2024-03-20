@@ -1,4 +1,4 @@
-﻿#
+#
 # Python virtual env manager inspired by VirtualEnvWrapper
 #
 # Copyright (c) 2017 Regis FLORET, Charles W. Swartz VI
@@ -49,26 +49,30 @@ if (!(Test-Path $WORKON_HOME)) {
 #>
 function Invoke-ActivateVirtualEnv {
     Param(
-        [Parameter(Mandatory=$true)][string]$EnvName
+        [Parameter()][string]$EnvName
     )
 
-    $EnvPath = Get-VirtualEnvPath $EnvName
-    if ((Test-Path $EnvPath) -eq $false) {
-        Write-FormattedError "The virtual environment '$EnvName' does not exist"
-        return
-    }
+    if ($EnvName) {
+        $EnvPath = Get-VirtualEnvPath $EnvName
+        if ((Test-Path $EnvPath) -eq $false) {
+            Write-FormattedError "The virtual environment '$EnvName' does not exist"
+            return
+        }
 
-    if (Test-VirtualEnvActivate $EnvName) {
-        Invoke-Expression "deactivate"
-    }
+        if (Test-VirtualEnvActivate $EnvName) {
+            Invoke-Expression "deactivate"
+        }
 
-    $ActivateScript = "$EnvPath\Scripts\Activate.ps1"
-    if ((Test-path $ActivateScript) -eq $false) {
-        Write-FormattedError "Unable to find the activation script in '$EnvName'"
-        return
-    }
+        $ActivateScript = "$EnvPath\Scripts\Activate.ps1"
+        if ((Test-path $ActivateScript) -eq $false) {
+            Write-FormattedError "Unable to find the activation script in '$EnvName'"
+            return
+        }
 
-    Import-Module $ActivateScript -Force
+        Import-Module $ActivateScript -Force
+    } else {
+        Invoke-ListVirtualEnv
+    }
 }
 
 
