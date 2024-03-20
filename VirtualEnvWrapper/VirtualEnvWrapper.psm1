@@ -252,9 +252,14 @@ function New-VirtualEnv($EnvName, $PythonVersion, $Upgrade) {
         return $false
     }
 
-    $Command = "py"
     if ($PythonVersion) {
-        $Command += " -$PythonVersion "
+        $strmatch = "$PythonVersion" | Select-String -Pattern '.*([2-3])\.?(\d+)'
+        $PythonMajorVersion = $strmatch.matches.groups[1]
+        $PythonMinorVersion = $strmatch.matches.groups[2]
+        $PythonDotVersion = "$PythonMajorVersion.$PythonMinorVersion"
+        $Command = "$env:MINIFORGE_HOME\envs\cpython$PythonDotVersion\python.exe"
+    } else {
+        $Command = "python"
     }
 
     $EnvPath = Get-VirtualEnvPath $EnvName
